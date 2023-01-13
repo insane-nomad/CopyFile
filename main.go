@@ -81,8 +81,6 @@ func copyFile(from, to string, limit, offset int64) error {
 		}
 	}(createFile)
 
-	//bar := pb.StartNew(int(limit) / bSize)
-
 	tmpl := ` {{string . "my_green_string" | green}} {{string . "my_blue_string" | blue}} {{percent .}} {{ bar . "[" "-" ">" "_" | green}} {{speed . | blue }}  {{etime .}}`
 	bar := pb.ProgressBarTemplate(tmpl).Start64(limit / bSize)
 
