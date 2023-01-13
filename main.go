@@ -26,13 +26,6 @@ var (
 	flagLimit  int64
 )
 
-func init() {
-	flag.StringVar(&flagInput, "input", "", "file read from")
-	flag.StringVar(&flagOutput, "output", "", "file save to")
-	flag.Int64Var(&flagOffset, "offset", 0, "file offset")
-	flag.Int64Var(&flagLimit, "limit", 0, "file read limit")
-}
-
 // файл источник (From), файл копия (To), Отступ в источнике (Offset), по умолчанию - 0,
 // Количество копируемых байт (Limit), по умолчанию - весь файл из From
 func copyFile(from, to string, limit, offset int64) error {
@@ -81,7 +74,8 @@ func copyFile(from, to string, limit, offset int64) error {
 		}
 	}(createFile)
 
-	tmpl := ` {{string . "my_green_string" | green}} {{string . "my_blue_string" | blue}} {{percent .}} {{ bar . "[" "-" ">" "_" | green}} {{speed . | blue }}  {{etime .}}`
+	tmpl := ` {{string . "my_green_string" | green}} {{string . "my_blue_string" | blue}} {{percent .}} 
+{{ bar . "[" "-" ">" "_" | green}} {{speed . | blue }}  {{etime .}}`
 	bar := pb.ProgressBarTemplate(tmpl).Start64(limit / bSize)
 
 	for shift < limit+offset {
@@ -123,6 +117,11 @@ func colorize(color string, message error) {
 }
 
 func main() {
+	flag.StringVar(&flagInput, "from", "", "file read from")
+	flag.StringVar(&flagOutput, "to", "", "file save to")
+	flag.Int64Var(&flagOffset, "offset", 0, "file offset")
+	flag.Int64Var(&flagLimit, "limit", 0, "file read limit")
+
 	flag.Parse()
 
 	//err := copyFile("12.txt", "newfile", 1000, 100)
